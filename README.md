@@ -1,3 +1,5 @@
+![windows build](https://github.com/bmenees/Diff.Net/workflows/windows%20build/badge.svg)
+
 # Diff.Net
 
 This is a differencing utility for Windows desktop written in C#.  It provides side-by-side differencing for files and directories.  For files it also provides an overview diff and a line-to-line diff.  It can also do a visual difference of binary files.
