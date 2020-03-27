@@ -4,11 +4,9 @@
 		<TargetFrameworks>netcoreapp3.1;net45</TargetFrameworks>
 		<OutputType>WinExe</OutputType>
 		<UseWindowsForms>true</UseWindowsForms>
+		<ApplicationIcon>Images\DiffDotNet.ico</ApplicationIcon>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
 	</PropertyGroup>
-
-	<ItemGroup>
-	  <None Include="..\..\.editorconfig" Link=".editorconfig" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Menees.Diffs.Windows.Forms" Version="4.9.3" />
