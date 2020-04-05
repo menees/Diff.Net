@@ -1,1 +1,1 @@
-These images are duplicates of some of the images in https://github.com/bmenees/Libraries/tree/master/src/Menees.Diffs.Windows.Forms/Images.
+These images are duplicates of some of the images in https://github.com/menees/Libraries/tree/master/src/Menees.Diffs.Windows.Forms/Images.
