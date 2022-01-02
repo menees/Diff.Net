@@ -22,7 +22,7 @@ namespace Diff.Net
 		private static void Main()
 		{
 			WindowsUtility.InitializeApplication("Diff.Net", null);
-			using MainForm mainForm = new MainForm();
+			using MainForm mainForm = new();
 			Application.Run(mainForm);
 		}
 

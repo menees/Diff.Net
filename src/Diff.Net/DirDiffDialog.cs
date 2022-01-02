@@ -153,7 +153,7 @@ namespace Diff.Net
 
 		private void GetDirectory(TextBox edit, string title)
 		{
-			string selectedFolder = WindowsUtility.SelectFolder(this, title, edit.Text);
+			string? selectedFolder = WindowsUtility.SelectFolder(this, title, edit.Text);
 			if (!string.IsNullOrEmpty(selectedFolder))
 			{
 				edit.Text = selectedFolder;

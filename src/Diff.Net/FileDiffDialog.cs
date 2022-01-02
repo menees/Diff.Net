@@ -139,7 +139,7 @@ namespace Diff.Net
 				// Try to make sure GetDirectoryName won't blow up.
 				if (fileName.IndexOfAny(Path.GetInvalidPathChars()) < 0)
 				{
-					string directoryName = Path.GetDirectoryName(fileName);
+					string? directoryName = Path.GetDirectoryName(fileName);
 					if (!string.IsNullOrEmpty(directoryName))
 					{
 						this.OpenDlg.InitialDirectory = directoryName;

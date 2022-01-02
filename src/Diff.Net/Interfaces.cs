@@ -30,7 +30,7 @@ namespace Diff.Net
 
 	internal interface IDifferenceForm
 	{
-		string ToolTipText { get; }
+		string? ToolTipText { get; }
 
 		void ShowDifferences(ShowDiffArgs e);
 

@@ -28,13 +28,13 @@ namespace Diff.Net
 		private static bool showMdiTabs = true;
 		private static HashType hashType = HashType.HashCode;
 		private static int updateLevel;
-		private static Font viewFont = new Font("Courier New", DefaultFontSize, GraphicsUnit.Point);
+		private static Font viewFont = new("Courier New", DefaultFontSize, GraphicsUnit.Point);
 
 		#endregion
 
 		#region Public Events
 
-		public static event EventHandler OptionsChanged;
+		public static event EventHandler? OptionsChanged;
 
 		#endregion
 
@@ -48,7 +48,7 @@ namespace Diff.Net
 
 		public static CompareType CompareType { get; set; }
 
-		public static DirectoryDiffFileFilter FileFilter { get; set; }
+		public static DirectoryDiffFileFilter? FileFilter { get; set; }
 
 		public static bool GoToFirstDiff { get; set; } = true;
 
@@ -193,7 +193,7 @@ namespace Diff.Net
 		}
 
 		public static bool DirExists(string directoryName)
-			=> CheckDirExists ? Directory.Exists(directoryName) : true;
+			=> !CheckDirExists || Directory.Exists(directoryName);
 
 		public static void EndUpdate()
 		{
@@ -207,7 +207,7 @@ namespace Diff.Net
 		}
 
 		public static bool FileExists(string fileName)
-			=> CheckFileExists ? File.Exists(fileName) : true;
+			=> !CheckFileExists || File.Exists(fileName);
 
 		public static string[] GetCustomFilters()
 		{
@@ -242,7 +242,7 @@ namespace Diff.Net
 			ShowChangeAsDeleteInsert = node.GetValue(nameof(ShowChangeAsDeleteInsert), ShowChangeAsDeleteInsert);
 			showMdiTabs = node.GetValue(nameof(ShowMdiTabs), true);
 
-			hashType = node.GetValue<HashType>(nameof(HashType), HashType.HashCode);
+			hashType = node.GetValue(nameof(HashType), HashType.HashCode);
 			IgnoreXmlWhitespace = node.GetValue(nameof(IgnoreXmlWhitespace), IgnoreXmlWhitespace);
 			LineDiffHeight = node.GetValue(nameof(LineDiffHeight), LineDiffHeight);
 			BinaryFootprintLength = node.GetValue(nameof(BinaryFootprintLength), BinaryFootprintLength);
@@ -255,14 +255,14 @@ namespace Diff.Net
 
 			// Consolas has been around for 5+ years now, and it renders without misaligned hatch brushes when scrolling.
 			string fontName = GetInstalledFontName(node.GetValue("FontName", "Consolas"), "Consolas", "Courier New", FontFamily.GenericMonospace.Name);
-			FontStyle fontStyle = node.GetValue<FontStyle>("FontStyle", FontStyle.Regular);
+			FontStyle fontStyle = node.GetValue("FontStyle", FontStyle.Regular);
 			float fontSize = float.Parse(node.GetValue("FontSize", "9.75"));
 			viewFont = new Font(fontName, fontSize, fontStyle, GraphicsUnit.Point);
 
 			// Load custom filters
 			CustomFilters.Clear();
-			node = node.GetSubNode("Custom Filters", false);
-			if (node == null)
+			ISettingsNode? filterNode = node.TryGetSubNode("Custom Filters");
+			if (filterNode == null)
 			{
 				// It appears to be the first time the program has run,
 				// so add in some default filters.
@@ -277,10 +277,10 @@ namespace Diff.Net
 			}
 			else
 			{
-				IList<string> names = node.GetSettingNames();
+				IList<string> names = filterNode.GetSettingNames();
 				for (int i = 0; i < names.Count; i++)
 				{
-					CustomFilters.Add(node.GetValue(names[i], string.Empty));
+					CustomFilters.Add(filterNode.GetValue(names[i], string.Empty));
 				}
 			}
 		}
@@ -323,14 +323,14 @@ namespace Diff.Net
 			node.SetValue("FontSize", Convert.ToString(viewFont.SizeInPoints));
 
 			// Save custom filters
-			if (node.GetSubNode("Custom Filters", false) != null)
+			if (node.TryGetSubNode("Custom Filters") != null)
 			{
 				node.DeleteSubNode("Custom Filters");
 			}
 
 			if (CustomFilters.Count > 0)
 			{
-				node = node.GetSubNode("Custom Filters", true);
+				node = node.GetSubNode("Custom Filters");
 				for (int i = 0; i < CustomFilters.Count; i++)
 				{
 					node.SetValue(i.ToString(), CustomFilters[i]);
@@ -344,7 +344,7 @@ namespace Diff.Net
 
 		private static string GetInstalledFontName(params string[] fontNames)
 		{
-			string result = null;
+			string? result = null;
 
 			foreach (string fontName in fontNames)
 			{
@@ -353,7 +353,7 @@ namespace Diff.Net
 				result = fontName;
 
 				// http://stackoverflow.com/questions/113989/test-if-a-font-is-installed
-				using (Font font = new Font(fontName, DefaultFontSize))
+				using (Font font = new(fontName, DefaultFontSize))
 				{
 					if (font.Name == fontName)
 					{
@@ -362,12 +362,12 @@ namespace Diff.Net
 				}
 			}
 
-			return result;
+			return result ?? string.Empty;
 		}
 
 		private static void SetValue<T>(ref T member, T value)
 		{
-			if (!object.Equals(member, value))
+			if (!Equals(member, value))
 			{
 				BeginUpdate();
 				member = value;

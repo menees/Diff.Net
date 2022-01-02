@@ -40,12 +40,12 @@ namespace Diff.Net
 			this.txtB.TabSpaces = DiffOptions.SpacesPerTab;
 		}
 
-		private void Cancel_Click(object sender, EventArgs e)
+		private void Cancel_Click(object? sender, EventArgs e)
 		{
 			this.Close();
 		}
 
-		private void OK_Click(object sender, EventArgs e)
+		private void OK_Click(object? sender, EventArgs e)
 		{
 			this.optionsControl.SaveOptions();
 
@@ -59,29 +59,29 @@ namespace Diff.Net
 			frmMain.ShowTextDifferences(left, right);
 		}
 
-		private void Swap_Click(object sender, EventArgs e)
+		private void Swap_Click(object? sender, EventArgs e)
 		{
 			string left = this.txtA.Text;
 			this.txtA.Text = this.txtB.Text;
 			this.txtB.Text = left;
 		}
 
-		private void OptionsChanged(object sender, EventArgs e)
+		private void OptionsChanged(object? sender, EventArgs e)
 		{
 			this.ApplyOptions();
 		}
 
-		private void TextPanel_Resize(object sender, EventArgs e)
+		private void TextPanel_Resize(object? sender, EventArgs e)
 		{
 			this.txtA.Width = (this.pnlText.ClientSize.Width - this.Split.Width) / 2;
 		}
 
-		private void TextBox_Changed(object sender, EventArgs e)
+		private void TextBox_Changed(object? sender, EventArgs e)
 		{
 			this.UpdateButtons();
 		}
 
-		private void TextDiffDlg_Load(object sender, EventArgs e)
+		private void TextDiffDlg_Load(object? sender, EventArgs e)
 		{
 			this.txtA.Text = Options.LastTextA;
 			this.txtB.Text = Options.LastTextB;
@@ -91,7 +91,7 @@ namespace Diff.Net
 			this.Icon = (Icon)this.Icon.Clone();
 		}
 
-		private void TextDiffForm_Closed(object sender, EventArgs e)
+		private void TextDiffForm_Closed(object? sender, EventArgs e)
 		{
 			Options.OptionsChanged -= this.OptionsChanged;
 		}

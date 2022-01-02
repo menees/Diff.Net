@@ -34,9 +34,9 @@ namespace Diff.Net
 		private static string[] GetNames()
 		{
 			// Note: This method is called from a static initializer, so it shouldn't depend on other static fields.
-			List<string> result = new List<string>(2);
+			List<string> result = new(2);
 
-			CommandLine cmdLine = new CommandLine(false);
+			CommandLine cmdLine = new(false);
 			cmdLine.AddSwitch("f", string.Empty, (value, errors) => ProcessFileOption(value), CommandLineSwitchOptions.AllowMultiple);
 			cmdLine.AddSwitch("d", string.Empty, (value, errors) => ProcessDirOption(value), CommandLineSwitchOptions.AllowMultiple);
 			cmdLine.AddValueHandler((value, errors) => result.Add(TextUtility.StripQuotes(value)));

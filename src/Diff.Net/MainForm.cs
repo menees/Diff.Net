@@ -21,7 +21,7 @@ namespace Diff.Net
 	{
 		#region Private Data Members
 
-		private IDifferenceDialog currentDifferenceDlg;
+		private IDifferenceDialog? currentDifferenceDlg;
 
 		#endregion
 
@@ -65,7 +65,7 @@ namespace Diff.Net
 
 		public static void HandleDragEnter(DragEventArgs e)
 		{
-			if (e.Data.GetDataPresent(DataFormats.FileDrop))
+			if (e.Data?.GetDataPresent(DataFormats.FileDrop) ?? false)
 			{
 				e.Effect = DragDropEffects.Copy;
 			}
@@ -77,7 +77,7 @@ namespace Diff.Net
 
 		public void HandleDragDrop(DragEventArgs e)
 		{
-			if (e.Data.GetDataPresent(DataFormats.FileDrop))
+			if (e.Data?.GetDataPresent(DataFormats.FileDrop) ?? false)
 			{
 				string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
@@ -89,7 +89,7 @@ namespace Diff.Net
 
 		public void ShowFileDifferences(string fileNameA, string fileNameB, DialogDisplay display)
 		{
-			using (FileDiffDialog dialog = new FileDiffDialog())
+			using (FileDiffDialog dialog = new())
 			{
 				dialog.NameA = fileNameA;
 				dialog.NameB = fileNameB;
@@ -120,8 +120,8 @@ namespace Diff.Net
 
 		private void FormSave_LoadSettings(object sender, SettingsEventArgs e)
 		{
-			Options.Load(e.SettingsNode.GetSubNode(nameof(Options), true));
-			DiffOptions.Load(e.SettingsNode.GetSubNode("DiffOptions", true));
+			Options.Load(e.SettingsNode.GetSubNode(nameof(Options)));
+			DiffOptions.Load(e.SettingsNode.GetSubNode("DiffOptions"));
 
 			this.ApplyOptions();
 
@@ -139,8 +139,8 @@ namespace Diff.Net
 		private void FormSave_SaveSettings(object sender, SettingsEventArgs e)
 #pragma warning restore CC0091 // Use static method
 		{
-			Options.Save(e.SettingsNode.GetSubNode(nameof(Options), true));
-			DiffOptions.Save(e.SettingsNode.GetSubNode("DiffOptions", true));
+			Options.Save(e.SettingsNode.GetSubNode(nameof(Options)));
+			DiffOptions.Save(e.SettingsNode.GetSubNode("DiffOptions"));
 		}
 
 		private DialogResult GetDialogResult(IDifferenceDialog dialog, DialogDisplay display)
@@ -250,17 +250,17 @@ namespace Diff.Net
 			HandleDragEnter(e);
 		}
 
-		private void About_Click(object sender, EventArgs e)
+		private void About_Click(object? sender, EventArgs e)
 		{
 			WindowsUtility.ShowAboutBox(this, Assembly.GetExecutingAssembly());
 		}
 
-		private void Cascade_Click(object sender, EventArgs e)
+		private void Cascade_Click(object? sender, EventArgs e)
 		{
 			this.LayoutMdi(MdiLayout.Cascade);
 		}
 
-		private void CloseAll_Click(object sender, EventArgs e)
+		private void CloseAll_Click(object? sender, EventArgs e)
 		{
 			foreach (Form child in this.MdiChildren)
 			{
@@ -268,23 +268,19 @@ namespace Diff.Net
 			}
 		}
 
-		private void CompareDirectories_Click(object sender, EventArgs e)
+		private void CompareDirectories_Click(object? sender, EventArgs e)
 		{
 			this.ShowDirDifferences(Options.LastDirA, Options.LastDirB, DialogDisplay.Always);
 		}
 
-		private void CompareFiles_Click(object sender, EventArgs e)
+		private void CompareFiles_Click(object? sender, EventArgs e)
 		{
 			this.ShowFileDifferences(Options.LastFileA, Options.LastFileB, DialogDisplay.Always);
 		}
 
-		private void CompareText_Click(object sender, EventArgs e)
+		private void CompareText_Click(object? sender, EventArgs e)
 		{
-#pragma warning disable CA2000 // Dispose objects before losing scope. This modeless form is owned by the MDI parent window.
-#pragma warning disable CC0022 // Should dispose object
-			TextDiffForm textDiff = new TextDiffForm();
-#pragma warning restore CC0022 // Should dispose object
-#pragma warning restore CA2000 // Dispose objects before losing scope
+			TextDiffForm textDiff = new();
 			if (this.NewChildShouldBeMaximized)
 			{
 				textDiff.WindowState = FormWindowState.Maximized;
@@ -294,25 +290,25 @@ namespace Diff.Net
 			textDiff.Show();
 		}
 
-		private void Exit_Click(object sender, EventArgs e)
+		private void Exit_Click(object? sender, EventArgs e)
 		{
 			this.Close();
 		}
 
-		private void Options_Click(object sender, EventArgs e)
+		private void Options_Click(object? sender, EventArgs e)
 		{
-			using (OptionsDialog dialog = new OptionsDialog())
+			using (OptionsDialog dialog = new())
 			{
 				dialog.ShowDialog(this);
 			}
 		}
 
-		private void TileHorizontally_Click(object sender, EventArgs e)
+		private void TileHorizontally_Click(object? sender, EventArgs e)
 		{
 			this.LayoutMdi(MdiLayout.TileHorizontal);
 		}
 
-		private void TileVertically_Click(object sender, EventArgs e)
+		private void TileVertically_Click(object? sender, EventArgs e)
 		{
 			this.LayoutMdi(MdiLayout.TileVertical);
 		}
@@ -325,12 +321,18 @@ namespace Diff.Net
 
 		private void RecentDirs_ItemClick(object sender, RecentItemClickEventArgs e)
 		{
-			this.ShowDirDifferences(e.Values.ElementAt(0), e.Values.ElementAt(1), DialogDisplay.UseOption);
+			if (e.Values != null)
+			{
+				this.ShowDirDifferences(e.Values.ElementAt(0), e.Values.ElementAt(1), DialogDisplay.UseOption);
+			}
 		}
 
 		private void RecentFiles_ItemClick(object sender, RecentItemClickEventArgs e)
 		{
-			this.ShowFileDifferences(e.Values.ElementAt(0), e.Values.ElementAt(1), DialogDisplay.UseOption);
+			if (e.Values != null)
+			{
+				this.ShowFileDifferences(e.Values.ElementAt(0), e.Values.ElementAt(1), DialogDisplay.UseOption);
+			}
 		}
 
 		private void ReportError(string message)
@@ -345,24 +347,20 @@ namespace Diff.Net
 			Justification = "Top-level method for showing differences.")]
 		private void ShowDifferences(string itemA, string itemB, DiffType diffType)
 		{
-			using (WaitCursor wc = new WaitCursor(this))
+			using (WaitCursor wc = new(this))
 			{
 				try
 				{
 					Form frmNew;
 					if (diffType == DiffType.Directory)
 					{
-#pragma warning disable CA2000 // Dispose objects before losing scope. This modeless form is owned by the MDI parent window.
 						frmNew = new DirDiffForm();
-#pragma warning restore CA2000 // Dispose objects before losing scope
 						this.RecentDirs.Add(BuildRecentItemMenuString(itemA, itemB), new string[] { itemA, itemB });
 					}
 					else
 					{
 						// Use a FileDiffForm for file or text diffs.
-#pragma warning disable CA2000 // Dispose objects before losing scope. This modeless form is owned by the MDI parent window.
 						frmNew = new FileDiffForm();
-#pragma warning restore CA2000 // Dispose objects before losing scope
 
 						if (diffType == DiffType.File)
 						{
@@ -380,7 +378,7 @@ namespace Diff.Net
 					IDifferenceForm frmDiff = (IDifferenceForm)frmNew;
 					frmDiff.ShowDifferences(new ShowDiffArgs(itemA, itemB, diffType));
 
-					MdiTab tab = this.mdiTabStrip.FindTab(frmNew);
+					MdiTab? tab = this.mdiTabStrip.FindTab(frmNew);
 					if (tab != null)
 					{
 						tab.ToolTipText = frmDiff.ToolTipText;
@@ -395,7 +393,7 @@ namespace Diff.Net
 
 		private void ShowDirDifferences(string directoryA, string directoryB, DialogDisplay display)
 		{
-			using (DirDiffDialog dialog = new DirDiffDialog())
+			using (DirDiffDialog dialog = new())
 			{
 				dialog.NameA = directoryA;
 				dialog.NameB = directoryB;
@@ -414,7 +412,7 @@ namespace Diff.Net
 			"Microsoft.Design",
 			"CA1031:DoNotCatchGeneralExceptionTypes",
 			Justification = "Application.Idle handlers must catch all exceptions.")]
-		private void UpdateUIOnIdle(object sender, EventArgs e)
+		private void UpdateUIOnIdle(object? sender, EventArgs e)
 		{
 			try
 			{
@@ -440,7 +438,7 @@ namespace Diff.Net
 			}
 		}
 
-		private void Options_OptionsChanged(object sender, EventArgs e)
+		private void Options_OptionsChanged(object? sender, EventArgs e)
 		{
 			this.ApplyOptions();
 		}
@@ -472,7 +470,7 @@ namespace Diff.Net
 					// Not all MDI children implement IDifferenceForm (e.g., TextDiffForm doesn't).
 					if (child is IDifferenceForm form)
 					{
-						MdiTab tab = this.mdiTabStrip.FindTab(child);
+						MdiTab? tab = this.mdiTabStrip.FindTab(child);
 						if (tab != null && !string.IsNullOrEmpty(tab.ToolTipText))
 						{
 							tab.ToolTipText = form.ToolTipText;
@@ -482,19 +480,19 @@ namespace Diff.Net
 			}
 		}
 
-		private void CloseTab_Click(object sender, EventArgs e)
+		private void CloseTab_Click(object? sender, EventArgs e)
 		{
 			this.mdiTabStrip.CloseActiveTab();
 		}
 
-		private void CloseAllButThisTab_Click(object sender, EventArgs e)
+		private void CloseAllButThisTab_Click(object? sender, EventArgs e)
 		{
 			this.mdiTabStrip.CloseAllButActiveTab();
 		}
 
 		private void MdiTabContext_Opening(object sender, CancelEventArgs e)
 		{
-			MdiTab mouseOverTab = this.mdiTabStrip.FindTabAtScreenPoint(Cursor.Position);
+			MdiTab? mouseOverTab = this.mdiTabStrip.FindTabAtScreenPoint(Cursor.Position);
 			e.Cancel = mouseOverTab == null;
 		}
 

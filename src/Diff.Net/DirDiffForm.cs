@@ -17,7 +17,7 @@ namespace Diff.Net
 	{
 		#region Private Data Members
 
-		private ShowDiffArgs lastDiffArgs;
+		private ShowDiffArgs? lastDiffArgs;
 
 		#endregion
 
@@ -32,11 +32,11 @@ namespace Diff.Net
 
 		#region Public Properties
 
-		public string ToolTipText
+		public string? ToolTipText
 		{
 			get
 			{
-				string result = null;
+				string? result = null;
 
 				if (this.lastDiffArgs != null)
 				{
@@ -53,7 +53,7 @@ namespace Diff.Net
 
 		public void ShowDifferences(ShowDiffArgs e)
 		{
-			DirectoryDiff diff = new DirectoryDiff(
+			DirectoryDiff diff = new(
 				Options.ShowOnlyInA,
 				Options.ShowOnlyInB,
 				Options.ShowDifferent,
@@ -88,7 +88,7 @@ namespace Diff.Net
 		{
 			if (this.lastDiffArgs != null)
 			{
-				using (WaitCursor wc = new WaitCursor(this))
+				using (WaitCursor wc = new(this))
 				{
 					this.ShowDifferences(this.lastDiffArgs);
 				}
