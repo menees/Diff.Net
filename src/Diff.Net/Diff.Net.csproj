@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Menees.Diffs.Windows.Forms" Version="5.0.0" />
+		<PackageReference Include="Menees.Diffs.Windows.Forms" Version="5.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>
