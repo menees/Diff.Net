@@ -159,7 +159,7 @@ namespace Diff.Net
 			this.MinimumSize = new System.Drawing.Size(528, 369);
 			this.Name = "TextDiffForm";
 			this.Text = "Compare Text";
-			this.Closed += new System.EventHandler(this.TextDiffForm_Closed);
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TextDiffForm_Closed);
 			this.Load += new System.EventHandler(this.TextDiffDlg_Load);
 			this.pnlText.ResumeLayout(false);
 			this.ResumeLayout(false);

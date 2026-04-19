@@ -275,11 +275,11 @@ namespace Diff.Net
 
 		private void DiffCtrl_ShowTextDifferences(object sender, DifferenceEventArgs e)
 		{
-			MainForm frmMain = (MainForm)this.MdiParent;
-			frmMain.ShowTextDifferences(e.ItemA, e.ItemB);
+			var frmMain = (MainForm?)this.MdiParent;
+			frmMain?.ShowTextDifferences(e.ItemA, e.ItemB);
 		}
 
-		private void FileDiffForm_Closed(object? sender, EventArgs e)
+		private void FileDiffForm_Closed(object? sender, FormClosedEventArgs e)
 		{
 			Options.OptionsChanged -= this.OptionsChanged;
 		}
@@ -287,7 +287,7 @@ namespace Diff.Net
 		private void FileDiffForm_Load(object? sender, EventArgs e)
 		{
 			// http://stackoverflow.com/questions/888865/problem-with-icon-on-creating-new-maximized-mdi-child-form-in-net
-			this.Icon = (Icon)this.Icon.Clone();
+			this.Icon = (Icon?)this.Icon?.Clone();
 		}
 
 		private void FileDiffForm_Shown(object? sender, EventArgs e)

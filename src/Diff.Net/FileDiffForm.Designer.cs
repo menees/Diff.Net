@@ -274,7 +274,7 @@ namespace Diff.Net
 			this.MainMenuStrip = this.MainMenu;
 			this.Name = "FileDiffForm";
 			this.Text = "File Comparison";
-			this.Closed += new System.EventHandler(this.FileDiffForm_Closed);
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FileDiffForm_Closed);
 			this.Load += new System.EventHandler(this.FileDiffForm_Load);
 			this.Shown += new System.EventHandler(this.FileDiffForm_Shown);
 			this.MainMenu.ResumeLayout(false);

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
@@ -8,10 +8,40 @@
 		<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Menees.Diffs.Windows.Forms" Version="5.0.3" />
-		<PackageReference Include="System.Resources.Extensions" Version="6.0.0"/>
-	</ItemGroup>
+	<Choose>
+		<When Condition="$(UseLocalMeneesLibraries)">
+			<ItemGroup>
+				<Reference Include="Menees.Common" Private="true">
+					<HintPath>$(LocalMeneesLibrariesSrc)Menees.Common\bin\$(Configuration)\$(LocalMeneesLibrariesFrameworkCoreBase)\Menees.Common.dll</HintPath>
+				</Reference>
+			</ItemGroup>
+			<ItemGroup>
+				<Reference Include="Menees.Diffs" Private="true">
+					<HintPath>$(LocalMeneesLibrariesSrc)Menees.Diffs\bin\$(Configuration)\$(LocalMeneesLibrariesFrameworkCoreBase)\Menees.Diffs.dll</HintPath>
+				</Reference>
+			</ItemGroup>
+			<ItemGroup>
+				<Reference Include="Menees.Windows" Private="true">
+					<HintPath>$(LocalMeneesLibrariesSrc)Menees.Windows\bin\$(Configuration)\$(LocalMeneesLibrariesFrameworkCoreBase)-windows\Menees.Windows.dll</HintPath>
+				</Reference>
+			</ItemGroup>
+			<ItemGroup>
+				<Reference Include="Menees.Windows.Forms" Private="true">
+					<HintPath>$(LocalMeneesLibrariesSrc)Menees.Windows.Forms\bin\$(Configuration)\$(LocalMeneesLibrariesFrameworkCoreBase)-windows\Menees.Windows.Forms.dll</HintPath>
+				</Reference>
+			</ItemGroup>
+			<ItemGroup>
+				<Reference Include="Menees.Diffs.Windows.Forms" Private="true">
+					<HintPath>$(LocalMeneesLibrariesSrc)Menees.Diffs.Windows.Forms\bin\$(Configuration)\$(LocalMeneesLibrariesFrameworkCoreBase)-windows\Menees.Diffs.Windows.Forms.dll</HintPath>
+				</Reference>
+			</ItemGroup>
+		</When>
+		<Otherwise>
+			<ItemGroup>
+				<PackageReference Include="Menees.Diffs.Windows.Forms" Version="6.0.0" />
+			</ItemGroup>
+		</Otherwise>
+	</Choose>
 
 	<ItemGroup>
 		<EmbeddedResource Update="Properties\Resources.resx">

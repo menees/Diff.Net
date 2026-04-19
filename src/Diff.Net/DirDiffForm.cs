@@ -97,14 +97,14 @@ namespace Diff.Net
 
 		private void DiffCtrl_ShowFileDifferences(object sender, DifferenceEventArgs e)
 		{
-			MainForm frmMain = (MainForm)this.MdiParent;
-			frmMain.ShowFileDifferences(e.ItemA, e.ItemB, DialogDisplay.UseOption);
+			var frmMain = (MainForm?)this.MdiParent;
+			frmMain?.ShowFileDifferences(e.ItemA, e.ItemB, DialogDisplay.UseOption);
 		}
 
 		private void DirDiffForm_Load(object sender, EventArgs e)
 		{
 			// http://stackoverflow.com/questions/888865/problem-with-icon-on-creating-new-maximized-mdi-child-form-in-net
-			this.Icon = (Icon)this.Icon.Clone();
+			this.Icon = (Icon?)this.Icon?.Clone();
 		}
 
 		private void MainMenu_ItemRemoved(object sender, ToolStripItemEventArgs e)

@@ -50,20 +50,18 @@ namespace Diff.Net
 			this.optionsControl.SaveOptions();
 
 			// We have to grab everything from the main form before closing.
-			MainForm frmMain = (MainForm)this.MdiParent;
+			MainForm? frmMain = (MainForm?)this.MdiParent;
 			string left = this.txtA.Text;
 			string right = this.txtB.Text;
 
 			// Close this form before showing the next one.
 			this.Close();
-			frmMain.ShowTextDifferences(left, right);
+			frmMain?.ShowTextDifferences(left, right);
 		}
 
 		private void Swap_Click(object? sender, EventArgs e)
 		{
-			string left = this.txtA.Text;
-			this.txtA.Text = this.txtB.Text;
-			this.txtB.Text = left;
+			(this.txtB.Text, this.txtA.Text) = (this.txtA.Text, this.txtB.Text);
 		}
 
 		private void OptionsChanged(object? sender, EventArgs e)
@@ -88,10 +86,10 @@ namespace Diff.Net
 			this.txtA.SelectionLength = 0;
 
 			// http://stackoverflow.com/questions/888865/problem-with-icon-on-creating-new-maximized-mdi-child-form-in-net
-			this.Icon = (Icon)this.Icon.Clone();
+			this.Icon = (Icon?)this.Icon?.Clone();
 		}
 
-		private void TextDiffForm_Closed(object? sender, EventArgs e)
+		private void TextDiffForm_Closed(object? sender, FormClosedEventArgs e)
 		{
 			Options.OptionsChanged -= this.OptionsChanged;
 		}

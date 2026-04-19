@@ -49,7 +49,7 @@ namespace Diff.Net
 			{
 				bool result = true;
 
-				Form child = this.ActiveMdiChild;
+				Form? child = this.ActiveMdiChild;
 				if (child != null)
 				{
 					result = child.WindowState == FormWindowState.Maximized;
@@ -79,11 +79,13 @@ namespace Diff.Net
 		{
 			if (e.Data?.GetDataPresent(DataFormats.FileDrop) ?? false)
 			{
-				string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-
-				// Post a message back to ourselves to process these files.
-				// It isn't safe to pop up a modal during an OLE/shell drop.
-				this.PostFiles(files, false);
+				var files = (string[]?)e.Data.GetData(DataFormats.FileDrop);
+				if (files is not null && files.Length > 0)
+				{
+					// Post a message back to ourselves to process these files.
+					// It isn't safe to pop up a modal during an OLE/shell drop.
+					this.PostFiles(files, false);
+				}
 			}
 		}
 
@@ -135,9 +137,7 @@ namespace Diff.Net
 			}
 		}
 
-#pragma warning disable CC0091 // Use static method. Designer likes instance-level event handlers.
 		private void FormSave_SaveSettings(object sender, SettingsEventArgs e)
-#pragma warning restore CC0091 // Use static method
 		{
 			Options.Save(e.SettingsNode.GetSubNode(nameof(Options)));
 			DiffOptions.Save(e.SettingsNode.GetSubNode("DiffOptions"));
@@ -243,9 +243,7 @@ namespace Diff.Net
 			this.HandleDragDrop(e);
 		}
 
-#pragma warning disable CC0091 // Use static method. Designer likes instance-level event handlers.
 		private void MainForm_DragEnter(object sender, DragEventArgs e)
-#pragma warning restore CC0091 // Use static method
 		{
 			HandleDragEnter(e);
 		}
@@ -316,7 +314,7 @@ namespace Diff.Net
 		private void PostFiles(string[] files, bool commandLine)
 		{
 			// Post a message back to ourselves to process these files.
-			this.BeginInvoke(new Action<string[], bool>(this.HandlePostedFiles), new object[] { files, commandLine });
+			this.BeginInvoke(new Action<string[], bool>(this.HandlePostedFiles), [files, commandLine]);
 		}
 
 		private void RecentDirs_ItemClick(object sender, RecentItemClickEventArgs e)
@@ -355,7 +353,7 @@ namespace Diff.Net
 					if (diffType == DiffType.Directory)
 					{
 						frmNew = new DirDiffForm();
-						this.RecentDirs.Add(BuildRecentItemMenuString(itemA, itemB), new string[] { itemA, itemB });
+						this.RecentDirs.Add(BuildRecentItemMenuString(itemA, itemB), [itemA, itemB]);
 					}
 					else
 					{
@@ -364,7 +362,7 @@ namespace Diff.Net
 
 						if (diffType == DiffType.File)
 						{
-							this.RecentFiles.Add(BuildRecentItemMenuString(itemA, itemB), new string[] { itemA, itemB });
+							this.RecentFiles.Add(BuildRecentItemMenuString(itemA, itemB), [itemA, itemB]);
 						}
 					}
 
@@ -379,10 +377,7 @@ namespace Diff.Net
 					frmDiff.ShowDifferences(new ShowDiffArgs(itemA, itemB, diffType));
 
 					MdiTab? tab = this.mdiTabStrip.FindTab(frmNew);
-					if (tab != null)
-					{
-						tab.ToolTipText = frmDiff.ToolTipText;
-					}
+					tab?.ToolTipText = frmDiff.ToolTipText;
 				}
 				catch (Exception ex)
 				{
@@ -416,7 +411,7 @@ namespace Diff.Net
 		{
 			try
 			{
-				Form child = this.ActiveMdiChild;
+				Form? child = this.ActiveMdiChild;
 				if (child is IDifferenceForm frmChild)
 				{
 					frmChild.UpdateUI();

@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".github/workflows/build.yml" />
+    <File Path=".gitignore" />
+    <File Path="eng/build.ps1" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Src/">
+    <File Path="src/Diff.Net.ruleset" />
+    <File Path="src/Directory.Build.props" />
+  </Folder>
+  <Project Path="src/Diff.Net/Diff.Net.csproj" />
+</Solution>

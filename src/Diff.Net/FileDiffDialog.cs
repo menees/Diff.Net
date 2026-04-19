@@ -29,6 +29,7 @@ namespace Diff.Net
 
 		#region Public Properties
 
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
 		public string NameA
 		{
 			get
@@ -43,6 +44,7 @@ namespace Diff.Net
 			}
 		}
 
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
 		public string NameB
 		{
 			get
@@ -68,6 +70,7 @@ namespace Diff.Net
 			}
 		}
 
+		[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 		public bool ShowShiftCheck
 		{
 			set
@@ -99,9 +102,7 @@ namespace Diff.Net
 
 		private void Swap_Click(object sender, EventArgs e)
 		{
-			string temp = this.edtLeft.Text;
-			this.edtLeft.Text = this.edtRight.Text;
-			this.edtRight.Text = temp;
+			(this.edtRight.Text, this.edtLeft.Text) = (this.edtLeft.Text, this.edtRight.Text);
 		}
 
 		private void Edit_TextChanged(object sender, EventArgs e)
@@ -111,13 +112,11 @@ namespace Diff.Net
 
 		private void FileDiffDlg_DragDrop(object sender, DragEventArgs e)
 		{
-			MainForm frmMain = (MainForm)this.Owner;
-			frmMain.HandleDragDrop(e);
+			var frmMain = (MainForm?)this.Owner;
+			frmMain?.HandleDragDrop(e);
 		}
 
-#pragma warning disable CC0091 // Use static method. Designer likes instance-level event handlers.
 		private void FileDiffDlg_DragEnter(object sender, DragEventArgs e)
-#pragma warning restore CC0091 // Use static method
 		{
 			MainForm.HandleDragEnter(e);
 		}

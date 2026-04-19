@@ -12,8 +12,9 @@
 		<LangVersion>latest</LangVersion>
 		<Copyright>Copyright © 2002-$([System.DateTime]::UtcNow.ToString(`yyyy`)) Bill Menees</Copyright>
 
-		<!-- When TargetFrameworks changes, also update the app's Properties\PublishProfiles\*.pubxml files. -->
-		<TargetFrameworks>net48;net6.0-windows</TargetFrameworks>
+		<!-- DOTNET_VERSION: Set .NET target. -->
+		<!-- When TargetFramework changes, also update the app's Properties\PublishProfiles\*.pubxml files. -->
+		<TargetFramework>net10.0-windows</TargetFramework>
 
 		<RepoSrcFolder>$(MSBuildThisFileDirectory)</RepoSrcFolder>
 		<CodeAnalysisRuleSet>$(RepoSrcFolder)Diff.Net.ruleset</CodeAnalysisRuleSet>
@@ -23,9 +24,12 @@
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 		<_SkipUpgradeNetAnalyzersNuGetWarning>true</_SkipUpgradeNetAnalyzersNuGetWarning>
+		<UseLocalMeneesLibraries>false</UseLocalMeneesLibraries>
+		<LocalMeneesLibrariesSrc/>
+		<BuildingInsideVisualStudio Condition="'$(BuildingInsideVisualStudio)' == ''">false</BuildingInsideVisualStudio>
 
 		<!-- Make the assembly, file, and NuGet package versions the same. -->
-		<Version>4.1.2</Version>
+		<Version>4.2.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -35,6 +39,12 @@
 		<!-- Only set the BuildTime's date in Debug builds, so it doesn't force a rebuild every time.-->
 		<!-- https://stackoverflow.com/a/6656553/1882616 -->
 		<BuildTime Condition="'$(BuildTime)' == ''">$([System.DateTime]::UtcNow.ToString(`yyyy-MM-dd 00:00:00Z`))</BuildTime>
+
+		<!-- Make debug builds inside VS use local Libraries if available (instead of NuGet packages) to make debugging easier. -->
+		<!-- https://docs.microsoft.com/en-us/visualstudio/msbuild/visual-studio-integration-msbuild#build-solutions -->
+		<LocalMeneesLibrariesSrc>$(RepoSrcFolder)..\..\Libraries\src\</LocalMeneesLibrariesSrc>
+		<UseLocalMeneesLibraries Condition="$(BuildingInsideVisualStudio) and exists($(LocalMeneesLibrariesSrc))">true</UseLocalMeneesLibraries>
+		<LocalMeneesLibrariesFrameworkCoreBase>net10.0</LocalMeneesLibrariesFrameworkCoreBase>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Release'">
@@ -49,19 +59,15 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="$(UseCustomCodeAnalyzers)">
-		<PackageReference Include="codecracker.CSharp" Version="1.1.0">
+		<PackageReference Include="Menees.Analyzers" Version="4.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Menees.Analyzers" Version="3.0.4">
+		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.201">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.376">
+		<PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
